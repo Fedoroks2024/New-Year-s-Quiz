@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music Player with Carousel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Styles for the body and player */
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .player {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 350px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .controls button {
+            background: none;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            margin: 0 10px;
+        }
+
+        .controls button:focus {
+            outline: none;
+        }
+
+        .controls i {
+            pointer-events: none;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            max-width: 300px;
+            height: 5px;
+            background: #ddd;
+            outline: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        /* Swiper styles */
+        .swiper {
+            width: 240px;
+            height: 240px;
+            margin: 0 auto;
+        }
+
+        .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .swiper-slide:nth-child(2n) {
+            background-color: rgb(0, 140, 255);
+        }
+
+        .swiper-slide:nth-child(3n) {
+            background-color: rgb(10, 184, 111);
+        }
+
+        .swiper-slide:nth-child(4n) {
+            background-color: rgb(211, 122, 7);
+        }
+
+        .swiper-slide:nth-child(5n) {
+            background-color: rgb(118, 163, 12);
+        }
+
+        .swiper-slide:nth-child(6n) {
+            background-color: rgb(180, 10, 47);
+        }
+
+        .swiper-slide:nth-child(7n) {
+            background-color: rgb(35, 99, 19);
+        }
+
+        .swiper-slide:nth-child(8n) {
+            background-color: rgb(0, 68, 255);
+        }
+
+        .swiper-slide:nth-child(9n) {
+            background-color: rgb(218, 12, 218);
+        }
+
+        .swiper-slide:nth-child(10n) {
+            background-color: rgb(54, 94, 77);
+        }
+
+        .track-list {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .track-list a {
+            display: block;
+            padding: 8px 0;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .track-list a:hover {
+            text-decoration: underline;
+            color: #4CAF50;
+        }
+      .track-list a.active{
+      color: #4CAF50;
+       font-weight: bold;
+    }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+</head>
+<body>
+<div class="player">
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" data-hash="slide1"><img src="./Image/SVV2Y-P3H4W.png" alt="Slide 1"/></div>
+            <div class="swiper-slide" data-hash="slide2">Slide 2</div>
+            <div class="swiper-slide" data-hash="slide3">Slide 3</div>
+            <div class="swiper-slide" data-hash="slide4">Slide 4</div>
+            <div class="swiper-slide" data-hash="slide5">Slide 5</div>
+            <div class="swiper-slide" data-hash="slide6">Slide 6</div>
+            <div class="swiper-slide" data-hash="slide7">Slide 7</div>
+            <div class="swiper-slide" data-hash="slide8">Slide 8</div>
+            <div class="swiper-slide" data-hash="slide9">Slide 9</div>
+            <div class="swiper-slide" data-hash="slide10">Slide 10</div>
+            <div class="swiper-slide" data-hash="slide11">Slide 11</div>
+            <div class="swiper-slide" data-hash="slide12">Slide 12</div>
+            <div class="swiper-slide" data-hash="slide13">Slide 13</div>
+            <div class="swiper-slide" data-hash="slide14">Slide 14</div>
+            <div class="swiper-slide" data-hash="slide15">Slide 15</div>
+            <div class="swiper-slide" data-hash="slide16">Slide 16</div>
+            <div class="swiper-slide" data-hash="slide17">Slide 17</div>
+            <div class="swiper-slide" data-hash="slide18">Slide 18</div>
+            <div class="swiper-slide" data-hash="slide19">Slide 19</div>
+            <div class="swiper-slide" data-hash="slide20">Slide 20</div>
+        </div>
+    </div>
+    <audio id="audio" src="https://new-years-songs.onrender.com/Music/Q6KQB-LAKQS.mp3" preload="metadata"></audio>
+    <div class="controls">
+        <button id="prevButton" onclick="prevSlide()"><i class="fa fa-backward"></i></button>
+        <button id="playPauseButton" onclick="togglePlayPause()">
+            <i id="playPauseIcon" class="fa fa-play"></i>
+        </button>
+        <button id="nextButton" onclick="nextSlide()"><i class="fa fa-forward"></i></button>
+    </div>
+    <input type="range" id="progress" value="0" max="100">
+    <div class="track-list">
+        <a href="" data-track="https://new-years-songs.onrender.com/Music/Q6KQB-LAKQS.mp3" data-hash="slide1">Track 1</a>
+        <a href="" data-track="https://new-years-songs.onrender.com/Music/KML3S-SCLP7.mp3" data-hash="slide2">Track 2</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/L8Y2L-F8QKD.mp3" data-hash="slide3">Track 3</a>
+         <a href="" data-track="https://new-years-songs.onrender.com/Music/M3J6M-H5YJ3.mp3" data-hash="slide4">Track 4</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/N4C7N-T5L8Y.mp3" data-hash="slide5">Track 5</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/P8M2P-D9R2Y.mp3" data-hash="slide6">Track 6</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/R2S4K-W7G9F.mp3" data-hash="slide7">Track 7</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/S6Q8Y-M1H2P.mp3" data-hash="slide8">Track 8</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/T3Z5B-Q9L2R.mp3" data-hash="slide9">Track 9</a>
+         <a href="#" data-track="https://new-years-songs.onrender.com/Music/V9N7C-J4X6S.mp3" data-hash="slide10">Track 10</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/W4F1G-K8H9P.mp3" data-hash="slide11">Track 11</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/X7B2J-N3Y5M.mp3" data-hash="slide12">Track 12</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/Y9L3R-C4V7B.mp3" data-hash="slide13">Track 13</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/Z2K6P-D1N9S.mp3" data-hash="slide14">Track 14</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/A3H4X-T9R1W.mp3" data-hash="slide15">Track 15</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/B7F5V-P2J8G.mp3" data-hash="slide16">Track 16</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/C1Y9M-Q4L2K.mp3" data-hash="slide17">Track 17</a>
+          <a href="#" data-track="https://new-years-songs.onrender.com/Music/D6R8Z-S3X9C.mp3" data-hash="slide18">Track 18</a>
+         <a href="#" data-track="https://new-years-songs.onrender.com/Music/E5V3B-J7N1P.mp3" data-hash="slide19">Track 19</a>
+        <a href="#" data-track="https://new-years-songs.onrender.com/Music/F4C2K-G9H7Y.mp3" data-hash="slide20">Track 20</a>
+    </div>
+</div>
+<script>
+    // Audio player script
+    const audio = document.getElementById('audio');
+    const playPauseButton = document.getElementById('playPauseButton');
+    const playPauseIcon = document.getElementById('playPauseIcon');
+    const progress = document.getElementById('progress');
+    const trackLinks = document.querySelectorAll('.track-list a');
+    let currentTrack = null;
+    function togglePlayPause() {
+        if (audio.paused) {
+            audio.play();
+            playPauseIcon.classList.remove('fa-play');
+            playPauseIcon.classList.add('fa-pause');
+        } else {
+            audio.pause();
+            playPauseIcon.classList.remove('fa-pause');
+            playPauseIcon.classList.add('fa-play');
+        }
+    }
+
+    audio.addEventListener('timeupdate', () => {
+        const percentage = (audio.currentTime / audio.duration) * 100;
+        progress.value = percentage;
+    });
+
+    progress.addEventListener('input', () => {
+        const seekTime = (progress.value / 100) * audio.duration;
+        audio.currentTime = seekTime;
+    });
+
+
+    audio.addEventListener('ended', () => {
+        playPauseIcon.classList.remove('fa-pause');
+        playPauseIcon.classList.add('fa-play');
+        progress.value = 0;
+        audio.currentTime = 0;
+    });
+
+      function prevSlide() {
+         swiper.slidePrev();
+         const currentHash = swiper.slides[swiper.activeIndex].getAttribute('data-hash');
+            updateTrackByHash(currentHash);
+    }
+
+    function nextSlide() {
+      swiper.slideNext();
+        const currentHash = swiper.slides[swiper.activeIndex].getAttribute('data-hash');
+          updateTrackByHash(currentHash);
+    }
+    function setActiveTrack(track){
+        trackLinks.forEach(link => link.classList.remove('active'));
+        track.classList.add('active');
+    }
+    function updateTrackByHash(hash){
+          trackLinks.forEach(link =>{
+            if(link.getAttribute('data-hash') === hash){
+                 if (link.getAttribute('data-track') !== audio.src) {
+                        audio.src = link.getAttribute('data-track');
+                        audio.play();
+                    }
+                 setActiveTrack(link);
+                 currentTrack = link;
+                    playPauseIcon.classList.remove('fa-play');
+                    playPauseIcon.classList.add('fa-pause');
+
+            }
+        });
+    }
+
+
+    trackLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            const trackUrl = this.getAttribute('data-track');
+           if (trackUrl !== audio.src) {
+             audio.src = trackUrl;
+             audio.play();
+                setActiveTrack(this);
+                 currentTrack = this;
+             playPauseIcon.classList.remove('fa-play');
+              playPauseIcon.classList.add('fa-pause');
+               } else if(audio.paused) {
+                audio.play()
+                 setActiveTrack(this);
+                   currentTrack = this;
+                playPauseIcon.classList.remove('fa-play');
+              playPauseIcon.classList.add('fa-pause');
+            }
+             else{
+                audio.pause();
+              playPauseIcon.classList.remove('fa-pause');
+              playPauseIcon.classList.add('fa-play');
+            }
+                const hash = this.getAttribute('data-hash');
+             swiper.slideTo(Array.from(swiper.slides).findIndex(slide => slide.getAttribute('data-hash') === hash))
+
+        });
+    });
+
+        audio.addEventListener('play', () => {
+           if(currentTrack){
+            setActiveTrack(currentTrack);
+           }
+        });
+        window.addEventListener('hashchange', function() {
+        const currentHash = window.location.hash.substring(1) || 'slide1';
+         swiper.slideTo(Array.from(swiper.slides).findIndex(slide => slide.getAttribute('data-hash') === currentHash))
+       updateTrackByHash(currentHash);
+        });
+          if (window.location.hash) {
+             const currentHash = window.location.hash.substring(1);
+            swiper.slideTo(Array.from(swiper.slides).findIndex(slide => slide.getAttribute('data-hash') === currentHash))
+              updateTrackByHash(currentHash);
+         }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    const swiper = new Swiper(".mySwiper", {
+        effect: "cards",
+        grabCursor: true,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+         hashNavigation: {
+            watchState: true,
+        },
+    });
+</script>
+</body>
+</html>
