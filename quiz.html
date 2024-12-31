@@ -23,7 +23,7 @@
         </div>
     </div>
     <script src="./script.js"></script>
-    <script type="text/javascript" charset="utf-8">
+    <script>
 const SNOWFLAKE_MIN_SIZE = 0.8;
 const SNOWFLAKE_MAX_SIZE = 2.0;
 const SNOWFLAKE_MIN_DURATION = 5;
@@ -38,27 +38,35 @@ function getRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function createAndAppendSnowflake() {
-  const snowflake = document.createElement('div');
+function createSnowflake() {
+    const snowflake = document.createElement('div');
     snowflake.classList.add('snowflake');
+    snowflake.textContent = '❄'; 
     snowflake.style.left = `${Math.random() * 100}vw`;
     snowflake.style.animationDuration = `${getRandom(SNOWFLAKE_MIN_DURATION, SNOWFLAKE_MAX_DURATION)}s`;
     snowflake.style.animationDelay = `${getRandom(0, SNOWFLAKE_MAX_DELAY)}s`;
     snowflake.style.fontSize = `${getRandom(SNOWFLAKE_MIN_SIZE, SNOWFLAKE_MAX_SIZE)}em`;
-    document.body.appendChild(snowflake);
-  
+    
+    // Добавление события animationend
     snowflake.addEventListener('animationend', () => {
-       snowflake.remove();
+        snowflake.remove();
     });
+    
+    return snowflake;
+}
+
+function appendSnowflake(snowflake) {
+    document.body.appendChild(snowflake);
 }
 
 function animateSnowflakes(timestamp) {
-  if (timestamp - lastSnowflakeCreateTime > SNOWFLAKE_CREATE_INTERVAL) {
-        createAndAppendSnowflake();
+    if (timestamp - lastSnowflakeCreateTime > SNOWFLAKE_CREATE_INTERVAL) {
+        const snowflake = createSnowflake();
+        appendSnowflake(snowflake);
         lastSnowflakeCreateTime = timestamp;
     }
-    
-  requestAnimationFrame(animateSnowflakes);
+
+    requestAnimationFrame(animateSnowflakes);
 }
 
 // Запускаем анимацию снежинок
