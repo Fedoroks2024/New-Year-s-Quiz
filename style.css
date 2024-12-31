@@ -24,12 +24,12 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column; /* Изменено на column, чтобы контент мог прокручиваться */
-    align-items: center; /* Выравнивание по центру по горизонтали */
-    min-height: 100vh; /* Устанавливаем минимальную высоту */
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
     color: var(--text-color);
-    overflow-x: hidden; /* Скрываем горизонтальную прокрутку */
-    position: relative; /* Для позиционирования снежинок */
+    overflow-x: hidden;
+    position: relative;
 }
 
 .container, .quiz-container {
@@ -39,8 +39,8 @@ body {
     box-shadow: 0 0.5rem 1.25rem var(--shadow-color);
     text-align: center;
     max-width: 650px;
-    margin: 1rem; /* Добавлен отступ сверху и снизу */
-    box-sizing: border-box; /* Учитываем padding и margin в ширине */
+    margin: 1rem;
+    box-sizing: border-box;
 }
 
 .quiz-options {
@@ -51,17 +51,19 @@ body {
 }
 
 .quiz-button, #next-button, #restart-button, #back-to-main, #reset-score {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.875rem 1.75rem;
     background: linear-gradient(to right, var(--primary-color), #2196F3);
     color: white;
-    text-decoration: none;
     border-radius: 0.5rem;
     border: none;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
     font-weight: 600;
     box-shadow: 0 0.125rem 0.375rem var(--shadow-button);
+    font-size: 1rem; /* Увеличенный шрифт */
 }
 
 .quiz-button:hover,
@@ -140,9 +142,7 @@ body {
     animation-name: fall;
     animation-timing-function: linear;
     z-index: 100;
-    color: rgba(240, 248, 255, 0.8); /* Используем AliceBlue с прозрачностью 0.8 */
-   /*  color: #f0f8ff;  Можно использовать hex значение (AliceBlue) */
-   /*  color: rgb(240, 248, 255);  Можно использовать rgb (AliceBlue) */
+    color: rgba(240, 248, 255, 0.8);
 }
 
 @keyframes fall {
