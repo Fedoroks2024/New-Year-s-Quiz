@@ -165,12 +165,8 @@ backToMainButton.addEventListener('click', () => {
 
 // ... (Ваши данные квизов все-равно нужны!) ...
 
-// Данные квизов.  **ВАЖНО**: Заполните этот объект!
-const allQuizzes = { //Example, Please update.
-  // ... (Your quiz data) ...
-};
 
-startQuiz(); // Start the quiz on page load
+
 const allQuizzes = {
     "1": {
         title: "Новый год: Оливье и странные традиции",
@@ -665,4 +661,4 @@ const allQuizzes = {
                 options: ["Тот, где все едут", "Тот, где все падают", "А что, так можно?", "Главное, чтобы доехали до низа"],
                  answer: 1
             }
-        
+        startQuiz(); // Start the quiz on page load
