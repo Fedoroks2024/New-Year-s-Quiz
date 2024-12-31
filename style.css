@@ -24,11 +24,12 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    flex-direction: column; /* Изменено на column, чтобы контент мог прокручиваться */
+    align-items: center; /* Выравнивание по центру по горизонтали */
+    min-height: 100vh; /* Устанавливаем минимальную высоту */
     color: var(--text-color);
-    overflow: hidden; /* Hide any horizontal overflow */
+    overflow-x: hidden; /* Скрываем горизонтальную прокрутку */
+    position: relative; /* Для позиционирования снежинок */
 }
 
 .container, .quiz-container {
@@ -38,6 +39,8 @@ body {
     box-shadow: 0 0.5rem 1.25rem var(--shadow-color);
     text-align: center;
     max-width: 650px;
+    margin: 1rem; /* Добавлен отступ сверху и снизу */
+    box-sizing: border-box; /* Учитываем padding и margin в ширине */
 }
 
 .quiz-options {
@@ -132,9 +135,9 @@ body {
 
 .snowflake {
     position: absolute;
-    top: -20px; /* Начинаем за пределами видимой области */
+    top: -20px;
     color: #fff;
-    font-family: Arial, sans-serif; /* Шрифт снежинок */
+    font-family: Arial, sans-serif;
     animation-name: fall;
     pointer-events: none;
     user-select: none;
@@ -143,6 +146,12 @@ body {
 
 @keyframes fall {
     to {
-        transform: translateY(105vh); /* Падение на всю высоту окна */
+        transform: translateY(105vh);
     }
+}
+
+/* Добавлено для прокрутки контента, если он не помещается на экране */
+html, body {
+    height: auto; /* Чтобы body был по высоте контента */
+    overflow-y: auto; /* Позволяет прокручивать контент по вертикали */
 }
