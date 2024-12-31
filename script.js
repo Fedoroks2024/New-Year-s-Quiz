@@ -7,12 +7,170 @@ const resultText = document.getElementById('result-text');
 const restartButton = document.getElementById('restart-button');
 const backToMainButton = document.getElementById('back-to-main');
 
-
 let currentQuestionIndex = 0;
 let score = 0;
 let quizId;
 let questions = [];
+let answeredQuestions = [];
 
+
+function getQuizIdFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('id');
+}
+
+function startQuiz() {
+  quizId = getQuizIdFromUrl();
+  if (!quizId || !allQuizzes[quizId]) {
+    alert('Неверный идентификатор квиза.');
+    return;
+  }
+
+  answeredQuestions = [];
+  currentQuestionIndex = 0;
+  score = 0;
+  questions = allQuizzes[quizId].questions;
+  quizTitle.textContent = allQuizzes[quizId].title;
+
+  resultContainer.classList.add('hidden');
+  nextButton.textContent = "Следующий вопрос";
+  showQuestion();
+  disableOptions();
+}
+
+
+
+function showQuestion() {
+  const questionData = questions[currentQuestionIndex];
+  questionElement.textContent = questionData.question;
+  optionsElement.innerHTML = '';
+
+  questionData.options.forEach((option, index) => {
+    const li = document.createElement('li');
+    li.textContent = option;
+    li.addEventListener('click', () => selectAnswer(index));
+    optionsElement.appendChild(li);
+  });
+
+
+ if (answeredQuestions.length === questions.length) {
+    nextButton.textContent = "Показать результат";
+  } else {
+     nextButton.textContent = "Следующий вопрос";
+  }
+
+}
+
+function selectAnswer(index) {
+  const questionData = questions[currentQuestionIndex];
+  const selectedOption = optionsElement.children[index];
+
+   //Проверяем, что вариант ответа еще не выбран
+   if (answeredQuestions.includes(index)) {
+     return;
+   }
+   answeredQuestions[currentQuestionIndex] = index;
+
+   // Добавляем стили для верного ответа
+   if (index === questionData.answer) {
+        selectedOption.classList.add('correct');
+        score++;
+   } else {
+        selectedOption.classList.add('wrong');
+        // Подсвечиваем правильный ответ
+        optionsElement.children[questionData.answer].classList.add('correct');
+   }
+
+   selectedOption.classList.add('selected');
+   disableOptions(); // Отключаем дальнейший выбор
+
+}
+
+
+function disableOptions() {
+  const optionElements = optionsElement.querySelectorAll('li');
+  optionElements.forEach(el => el.style.pointerEvents = 'none');
+}
+
+
+function enableOptions() {
+  const optionElements = optionsElement.querySelectorAll('li');
+  optionElements.forEach(el => el.style.pointerEvents = 'auto');
+}
+
+function updateScoreInStorage() {
+  let totalScore = localStorage.getItem('totalScore');
+  totalScore = totalScore ? parseInt(totalScore) : 0;
+  totalScore += score;
+  localStorage.setItem('totalScore', totalScore);
+}
+
+
+function showResult() {
+   const correctAnswers = answeredQuestions.filter((answer, index) => answer === questions[index].answer).length;
+   score = correctAnswers;
+   resultText.textContent = `Вы набрали ${score} из ${questions.length} баллов!`;
+   updateScoreInStorage();
+
+   questionElement.textContent = '';
+   optionsElement.innerHTML = '';
+   resultContainer.classList.remove('hidden');
+   nextButton.classList.add('hidden');
+   enableOptions();
+}
+
+
+
+
+function nextQuestion() {
+
+    if (currentQuestionIndex < questions.length -1) {
+        currentQuestionIndex++;
+       
+      
+        showQuestion();
+
+    
+        // очищаем стили предыдущих ответов
+       const optionElements = optionsElement.querySelectorAll('li');
+       optionElements.forEach(element => {
+           element.classList.remove('correct');
+           element.classList.remove('wrong');
+           element.classList.remove('selected');
+           element.style.pointerEvents = 'auto';
+       });
+
+       answeredQuestions.push(undefined);
+
+       
+    } else if (currentQuestionIndex === questions.length-1 && answeredQuestions.length === questions.length){
+
+        showResult();
+    } else {
+         alert('Выберите ответ!');
+    }
+}
+
+
+
+nextButton.addEventListener('click', nextQuestion);
+restartButton.addEventListener('click', startQuiz);
+
+backToMainButton.addEventListener('click', () => {
+    window.location.href = 'index.html';
+});
+
+
+
+
+// ... (Ваши данные квизов все-равно нужны!) ...
+
+// Данные квизов.  **ВАЖНО**: Заполните этот объект!
+const allQuizzes = { //Example, Please update.
+  // ... (Your quiz data) ...
+};
+
+startQuiz(); // Start the quiz on page load
 const allQuizzes = {
     "1": {
         title: "Новый год: Оливье и странные традиции",
