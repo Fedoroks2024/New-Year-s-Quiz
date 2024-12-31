@@ -13,7 +13,6 @@ let quizId;
 let questions = [];
 let answeredQuestions = [];
 
-
 function getQuizIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get('id');
@@ -23,6 +22,7 @@ function startQuiz() {
   quizId = getQuizIdFromUrl();
   if (!quizId || !allQuizzes[quizId]) {
     alert('Неверный идентификатор квиза.');
+    window.location.href = 'index.html';
     return;
   }
 
@@ -33,12 +33,10 @@ function startQuiz() {
   quizTitle.textContent = allQuizzes[quizId].title;
 
   resultContainer.classList.add('hidden');
+  nextButton.classList.remove('hidden');
   nextButton.textContent = "Следующий вопрос";
   showQuestion();
-  disableOptions();
 }
-
-
 
 function showQuestion() {
   const questionData = questions[currentQuestionIndex];
@@ -49,53 +47,46 @@ function showQuestion() {
     const li = document.createElement('li');
     li.textContent = option;
     li.addEventListener('click', () => selectAnswer(index));
+    li.style.pointerEvents = 'auto'; // Добавлено: делаем варианты ответов кликабельными
     optionsElement.appendChild(li);
   });
 
-
- if (answeredQuestions.length === questions.length) {
-    nextButton.textContent = "Показать результат";
-  } else {
-     nextButton.textContent = "Следующий вопрос";
+  if (answeredQuestions[currentQuestionIndex] !== undefined) {
+    disableOptions();
   }
 
+  nextButton.textContent = (currentQuestionIndex === questions.length - 1) ? "Показать результат" : "Следующий вопрос";
 }
 
 function selectAnswer(index) {
   const questionData = questions[currentQuestionIndex];
   const selectedOption = optionsElement.children[index];
 
-   //Проверяем, что вариант ответа еще не выбран
-   if (answeredQuestions.includes(index)) {
-     return;
-   }
-   answeredQuestions[currentQuestionIndex] = index;
+  if (answeredQuestions[currentQuestionIndex] !== undefined) {
+    return;
+  }
+  
+  answeredQuestions[currentQuestionIndex] = index;
 
-   // Добавляем стили для верного ответа
-   if (index === questionData.answer) {
-        selectedOption.classList.add('correct');
-        score++;
-   } else {
-        selectedOption.classList.add('wrong');
-        // Подсвечиваем правильный ответ
-        optionsElement.children[questionData.answer].classList.add('correct');
-   }
+  if (index === questionData.answer) {
+    selectedOption.classList.add('correct');
+    score++;
+  } else {
+    selectedOption.classList.add('wrong');
+    optionsElement.children[questionData.answer].classList.add('correct');
+  }
 
-   selectedOption.classList.add('selected');
-   disableOptions(); // Отключаем дальнейший выбор
+  selectedOption.classList.add('selected');
+  disableOptions();
 
+  if (currentQuestionIndex === questions.length - 1) {
+      nextButton.textContent = "Показать результат";
+  }
 }
-
 
 function disableOptions() {
   const optionElements = optionsElement.querySelectorAll('li');
   optionElements.forEach(el => el.style.pointerEvents = 'none');
-}
-
-
-function enableOptions() {
-  const optionElements = optionsElement.querySelectorAll('li');
-  optionElements.forEach(el => el.style.pointerEvents = 'auto');
 }
 
 function updateScoreInStorage() {
@@ -105,67 +96,38 @@ function updateScoreInStorage() {
   localStorage.setItem('totalScore', totalScore);
 }
 
-
 function showResult() {
-   const correctAnswers = answeredQuestions.filter((answer, index) => answer === questions[index].answer).length;
-   score = correctAnswers;
-   resultText.textContent = `Вы набрали ${score} из ${questions.length} баллов!`;
-   updateScoreInStorage();
+  const correctAnswers = answeredQuestions.filter((answer, index) => answer === questions[index].answer).length;
+  score = correctAnswers;
+  resultText.textContent = `Вы набрали ${score} из ${questions.length} баллов!`;
+  updateScoreInStorage();
 
-   questionElement.textContent = '';
-   optionsElement.innerHTML = '';
-   resultContainer.classList.remove('hidden');
-   nextButton.classList.add('hidden');
-   enableOptions();
+  questionElement.textContent = '';
+  optionsElement.innerHTML = '';
+  resultContainer.classList.remove('hidden');
+  nextButton.classList.add('hidden');
 }
-
-
-
 
 function nextQuestion() {
+  if (answeredQuestions[currentQuestionIndex] === undefined && currentQuestionIndex < questions.length) {
+    alert('Выберите ответ!');
+    return;
+  }
 
-    if (currentQuestionIndex < questions.length -1) {
-        currentQuestionIndex++;
-       
-      
-        showQuestion();
-
-    
-        // очищаем стили предыдущих ответов
-       const optionElements = optionsElement.querySelectorAll('li');
-       optionElements.forEach(element => {
-           element.classList.remove('correct');
-           element.classList.remove('wrong');
-           element.classList.remove('selected');
-           element.style.pointerEvents = 'auto';
-       });
-
-       answeredQuestions.push(undefined);
-
-       
-    } else if (currentQuestionIndex === questions.length-1 && answeredQuestions.length === questions.length){
-
-        showResult();
-    } else {
-         alert('Выберите ответ!');
-    }
+  if (currentQuestionIndex < questions.length - 1) {
+    currentQuestionIndex++;
+    showQuestion();
+  } else {
+    showResult();
+  }
 }
-
-
 
 nextButton.addEventListener('click', nextQuestion);
 restartButton.addEventListener('click', startQuiz);
 
 backToMainButton.addEventListener('click', () => {
-    window.location.href = 'index.html';
+  window.location.href = 'index.html';
 });
-
-
-
-
-// ... (Ваши данные квизов все-равно нужны!) ...
-
-
 
 const allQuizzes = {
     "1": {
@@ -607,59 +569,5 @@ const allQuizzes = {
                  answer: 1
              }
         ]
-    },
-    "9": {
-        title: "Зимние виды спорта: От коньков до сноуборда",
-        questions: [
-            {
-                 question: "Какой вид спорта включает катание на доске по снегу: тот, где все падают, или тот, где все скользят?",
-                options: ["Тот, где все падают", "Тот, где все скользят", "А что, так можно?", "Главное, чтобы весело было"],
-                  answer: 1
-           },
-           {
-                question: "Какой вид спорта играют с шайбой на льду: тот, где все толкают, или тот, где все бьют?",
-                 options: ["Тот, где все толкают", "Тот, где все бьют", "А что, бывает по-другому?", "Главное, чтобы шайбу забили"],
-                 answer: 1
-            },
-            {
-                question: "Какой вид спорта сочетает в себе лыжный спорт и стрельбу: тот, где бегут, или тот, где стреляют?",
-                options: ["Тот, где бегут", "Тот, где стреляют", "А можно просто бегать?", "Главное, чтобы в цель попадали"],
-                answer: 0
-           },
-            {
-               question: "Какой вид спорта включает скольжение по льду на коньках: тот, где все танцуют, или тот, где все бегут?",
-                options: ["Тот, где все танцуют", "Тот, где все бегут", "А можно просто на коньках?", "Главное, чтобы скользили хорошо"],
-                 answer: 1
-            },
-             {
-                 question: "Какой вид спорта включает прыжки на лыжах с трамплина: тот, где все летают, или тот, где все падают?",
-                options: ["Тот, где все летают", "Тот, где все падают", "А что, так можно?", "Главное, чтобы приземлились"],
-                answer: 0
-           },
-            {
-                question: "Какой вид спорта включает спуск на санях по ледяной трассе: тот, где все кричат, или тот, где все молчат?",
-                options: ["Тот, где все кричат", "Тот, где все молчат", "А что, так бывает?", "Главное, чтобы доехали"],
-                 answer: 0
-            },
-            {
-                question: "Какой вид спорта включает скольжение по льду с щетками: тот, где все метут, или тот, где все толкают?",
-                 options: ["Тот, где все метут", "Тот, где все толкают", "А что, так можно?", "Главное, чтобы дошли до конца"],
-                 answer: 1
-             },
-           {
-                 question: "Какой вид спорта включает скоростное скольжение по льду: тот, где все обгоняют, или тот, где все падают?",
-                options: ["Тот, где все обгоняют", "Тот, где все падают", "А что, так бывает?", "Главное, чтобы были быстрее всех"],
-                 answer: 0
-           },
-           {
-                 question: "Какой вид спорта включает трюки на лыжах: тот, где все летают, или тот, где все крутятся?",
-                options: ["Тот, где все летают", "Тот, где все крутятся", "А что, так можно?", "Главное, чтобы было красиво"],
-                 answer: 1
-            },
-             {
-                question: "Какой вид спорта связан со спуском на лыжах с горы: тот, где все едут, или тот, где все падают?",
-                options: ["Тот, где все едут", "Тот, где все падают", "А что, так можно?", "Главное, чтобы доехали до низа"],
-                 answer: 1
-            }
-    }
-        startQuiz(); // Start the quiz on page load
+    }};
+    startQuiz();
