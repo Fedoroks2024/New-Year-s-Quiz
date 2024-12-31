@@ -140,6 +140,7 @@ body {
     animation-name: fall;
     animation-timing-function: linear; /*  для равномерного падения */
     z-index: 100; /* снежинки поверх остального контента */
+    color: #fff;
 
 }
 
