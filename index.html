@@ -28,7 +28,45 @@
     </div>
     <script src="index.js"></script>
     <script type="text/javascript" charset="utf-8">
+const SNOWFLAKE_MIN_SIZE = 0.8;
+const SNOWFLAKE_MAX_SIZE = 2.0;
+const SNOWFLAKE_MIN_DURATION = 5;
+const SNOWFLAKE_MAX_DURATION = 10;
+const SNOWFLAKE_MAX_DELAY = 3;
 
+const SNOWFLAKE_CREATE_INTERVAL = 150;
+
+let lastSnowflakeCreateTime = 0;
+
+function getRandom(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function createAndAppendSnowflake() {
+  const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.style.left = `${Math.random() * 100}vw`;
+    snowflake.style.animationDuration = `${getRandom(SNOWFLAKE_MIN_DURATION, SNOWFLAKE_MAX_DURATION)}s`;
+    snowflake.style.animationDelay = `${getRandom(0, SNOWFLAKE_MAX_DELAY)}s`;
+    snowflake.style.fontSize = `${getRandom(SNOWFLAKE_MIN_SIZE, SNOWFLAKE_MAX_SIZE)}em`;
+    document.body.appendChild(snowflake);
+  
+    snowflake.addEventListener('animationend', () => {
+       snowflake.remove();
+    });
+}
+
+function animateSnowflakes(timestamp) {
+  if (timestamp - lastSnowflakeCreateTime > SNOWFLAKE_CREATE_INTERVAL) {
+        createAndAppendSnowflake();
+        lastSnowflakeCreateTime = timestamp;
+    }
+    
+  requestAnimationFrame(animateSnowflakes);
+}
+
+// Запускаем анимацию снежинок
+requestAnimationFrame(animateSnowflakes);
     </script>
 </body>
 </html>

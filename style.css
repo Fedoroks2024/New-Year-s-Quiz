@@ -1,57 +1,81 @@
+:root {
+    --primary-color: #29abe2;
+    --primary-darker: #1e88e5;
+    --secondary-color: #f44336;
+    --secondary-darker: #e53935;
+    --text-color: #333;
+    --background-light: #f0f2f5;
+    --background-dark: #e1e5ea;
+    --container-background-light: #ffffff;
+    --container-background-dark: #f0f0f0;
+    --option-light: #f9f9f9;
+    --option-dark: #ececec;
+    --option-hover-light: #eaeaea;
+    --option-hover-dark: #d5d5d5;
+    --option-selected-light: #4CAF50;
+    --option-selected-dark: #43A047;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --shadow-button: rgba(0, 0, 0, 0.1);
+}
+
 body {
     font-family: 'Roboto', 'Helvetica Neue', sans-serif;
-    background: linear-gradient(to bottom, #f0f2f5, #e1e5ea); /* Subtle gradient background */
+    background: linear-gradient(to bottom, var(--background-light), var(--background-dark));
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    color: #333;
+    color: var(--text-color);
+    overflow: hidden; /* Hide any horizontal overflow */
 }
 
 .container, .quiz-container {
-    background: white;
-    padding: 40px; /* Increased padding for more space */
-    border-radius: 15px; /* More rounded corners */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow */
+    background: linear-gradient(to bottom right, var(--container-background-light), var(--container-background-dark));
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1.25rem var(--shadow-color);
     text-align: center;
-    max-width: 650px; /* Slightly wider max-width */
-    background: linear-gradient(to bottom right, #ffffff, #f0f0f0); /* Subtle gradient on container */
+    max-width: 650px;
 }
 
 .quiz-options {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjusted minmax for larger buttons */
-    gap: 20px; /* Increased gap */
-    margin-top: 40px; /* Increased margin */
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.25rem;
+    margin-top: 2.5rem;
 }
 
 .quiz-button, #next-button, #restart-button, #back-to-main, #reset-score {
     display: inline-block;
-    padding: 14px 28px; /* Slightly larger padding */
-    background: linear-gradient(to right, #29abe2, #2196F3); /* Gradient button */
+    padding: 0.875rem 1.75rem;
+    background: linear-gradient(to right, var(--primary-color), #2196F3);
     color: white;
     text-decoration: none;
-    border-radius: 8px; /* More rounded corners */
+    border-radius: 0.5rem;
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease; /* Smoother transition */
-    font-weight: 600; /* Bolder font-weight */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle button shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 0.125rem 0.375rem var(--shadow-button);
 }
 
-.quiz-button:hover, #next-button:hover, #restart-button:hover, #back-to-main:hover, #reset-score:hover {
-    background: linear-gradient(to right, #1e88e5, #1565c0); /* Darker hover gradient */
-    transform: translateY(-3px); /* More pronounced lift */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly increased shadow */
+.quiz-button:hover,
+#next-button:hover,
+#restart-button:hover,
+#back-to-main:hover,
+#reset-score:hover {
+    background: linear-gradient(to right, var(--primary-darker), #1565c0);
+    transform: translateY(-0.2rem);
+    box-shadow: 0 0.25rem 0.5rem var(--shadow-color);
 }
 
 #question-container {
-    margin-bottom: 30px; /* Increased margin */
-    font-size: 1.3em; /* Slightly larger font size */
-    font-weight: 500; /* Slightly bolder font-weight */
-    color: #2c3e50; /* Slightly darker question text */
+    margin-bottom: 1.875rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #2c3e50;
 }
 
 #options {
@@ -60,47 +84,65 @@ body {
 }
 
 #options li {
-    margin-bottom: 15px; /* Increased margin */
+    margin-bottom: 1rem;
     cursor: pointer;
-    padding: 18px; /* Increased padding */
-    background: linear-gradient(to bottom, #f9f9f9, #ececec); /* Subtle gradient on options */
-    border-radius: 10px;
-    border: 1px solid #ddd; /* Slightly darker border */
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle box-shadow on options */
+    padding: 1.125rem;
+    background: linear-gradient(to bottom, var(--option-light), var(--option-dark));
+    border-radius: 0.625rem;
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    box-shadow: 0 0.125rem 0.25rem var(--shadow-button);
     font-weight: 500;
 }
 
 #options li:hover {
-    background: linear-gradient(to bottom, #eaeaea, #d5d5d5); /* Darker hover gradient */
-    transform: translateY(-3px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(to bottom, var(--option-hover-light), var(--option-hover-dark));
+    transform: translateY(-0.2rem);
+    box-shadow: 0 0.1875rem 0.375rem var(--shadow-color);
 }
 
 #options li.selected {
-    background: linear-gradient(to right, #4CAF50, #43A047); /* Gradient selected option */
+    background: linear-gradient(to right, var(--option-selected-light), var(--option-selected-dark));
     color: white;
-    border-color: #4CAF50;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    border-color: var(--option-selected-light);
+    box-shadow: 0 0.1875rem 0.5rem var(--shadow-color);
 }
+
 
 .hidden {
     display: none;
 }
 
 #total-score-container {
-    margin-top: 40px;
-    font-size: 1.2em;
+    margin-top: 2.5rem;
+    font-size: 1.2rem;
     font-weight: 600;
 }
 
 #reset-score {
-    margin-left: 20px;
-    background: linear-gradient(to right, #f44336, #d32f2f); /* Red gradient reset */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: 1.25rem;
+    background: linear-gradient(to right, var(--secondary-color), var(--secondary-darker));
+    box-shadow: 0 0.125rem 0.25rem var(--shadow-button);
 }
 
 #reset-score:hover {
-    background: linear-gradient(to right, #e53935, #b71c1c);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(to right, var(--secondary-darker), #b71c1c);
+    box-shadow: 0 0.1875rem 0.375rem var(--shadow-color);
+}
+
+.snowflake {
+    position: absolute;
+    top: -20px; /* Начинаем за пределами видимой области */
+    color: #fff;
+    font-family: Arial, sans-serif; /* Шрифт снежинок */
+    animation-name: fall;
+    pointer-events: none;
+    user-select: none;
+    content: '*';
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(105vh); /* Падение на всю высоту окна */
+    }
 }
