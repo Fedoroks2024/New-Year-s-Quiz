@@ -64,6 +64,7 @@ body {
     font-weight: 600;
     box-shadow: 0 0.125rem 0.375rem var(--shadow-button);
     font-size: 1rem; /* Увеличенный шрифт */
+    text-decoration: none; /* Убираем подчеркивание */
 }
 
 .quiz-button:hover,
@@ -98,6 +99,7 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
     box-shadow: 0 0.125rem 0.25rem var(--shadow-button);
     font-weight: 500;
+    text-decoration: none; /* Убираем подчеркивание */
 }
 
 #options li:hover {
@@ -111,6 +113,7 @@ body {
     color: white;
     border-color: var(--option-selected-light);
     box-shadow: 0 0.1875rem 0.5rem var(--shadow-color);
+    text-decoration: none; /* Убираем подчеркивание */
 }
 
 
@@ -128,6 +131,7 @@ body {
     margin-left: 1.25rem;
     background: linear-gradient(to right, var(--secondary-color), var(--secondary-darker));
     box-shadow: 0 0.125rem 0.25rem var(--shadow-button);
+        text-decoration: none; /* Убираем подчеркивание */
 }
 
 #reset-score:hover {
