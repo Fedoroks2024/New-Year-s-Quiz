@@ -133,19 +133,20 @@ body {
     box-shadow: 0 0.1875rem 0.375rem var(--shadow-color);
 }
 .snowflake {
-    position: fixed; /*  фиксируем положение снежинок относительно окна */
-    top: -2em; /*  начинаем за пределами видимой области, чтобы не было рывков*/
-    pointer-events: none; /* чтобы не мешали взаимодействию */
-    user-select: none; /* запрет выделения текста */
+    position: fixed;
+    top: -2em;
+    pointer-events: none;
+    user-select: none;
     animation-name: fall;
-    animation-timing-function: linear; /*  для равномерного падения */
-    z-index: 100; /* снежинки поверх остального контента */
-    color: #fff;
-
+    animation-timing-function: linear;
+    z-index: 100;
+    color: rgba(240, 248, 255, 0.8); /* Используем AliceBlue с прозрачностью 0.8 */
+   /*  color: #f0f8ff;  Можно использовать hex значение (AliceBlue) */
+   /*  color: rgb(240, 248, 255);  Можно использовать rgb (AliceBlue) */
 }
 
 @keyframes fall {
     to {
-        transform: translateY(105vh); /* Снежинки падают за нижний край экрана */
+        transform: translateY(105vh);
     }
 }
