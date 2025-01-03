@@ -101,6 +101,7 @@
         .hidden {
             display: none;
         }
+
         .snowflake {
             position: fixed;
             top: -2em;
@@ -117,6 +118,7 @@
                 transform: translateY(105vh);
             }
         }
+
         .error-message {
             color: var(--secondary-color);
             margin-top: 0.5rem;
@@ -134,22 +136,23 @@
 </div>
 
 <script>
-  function createSnowflake() {
-    const snowflake = document.createElement('div');
-    snowflake.classList.add('snowflake');
-    snowflake.innerHTML = '❄';
-    snowflake.style.left = `${Math.random() * 100}vw`;
-    snowflake.style.animationDuration = `${Math.random() * 10 + 5}s`;
-    snowflake.style.fontSize = `${Math.random() * 1.5 + 0.8}rem`; // Random size
-    snowflake.style.opacity = Math.random();
+    function createSnowflake() {
+        const snowflake = document.createElement('div');
+        snowflake.classList.add('snowflake');
+        snowflake.innerHTML = '❄';
+        snowflake.style.left = `${Math.random() * 100}vw`;
+        snowflake.style.animationDuration = `${Math.random() * 10 + 5}s`;
+        snowflake.style.fontSize = `${Math.random() * 1.5 + 0.8}rem`; // Random size
+        snowflake.style.opacity = Math.random();
 
-    document.body.appendChild(snowflake);
+        document.body.appendChild(snowflake);
 
-    snowflake.addEventListener('animationend', () => {
-        snowflake.remove();
-    });
-  }
-  setInterval(createSnowflake, 250);
+        snowflake.addEventListener('animationend', () => {
+            snowflake.remove();
+        });
+    }
+
+    setInterval(createSnowflake, 250);
 
     const messageElement = document.getElementById('message');
     const nameInput = document.getElementById('nameInput');
@@ -169,11 +172,13 @@
             return null;
         }
     }
+
     function displayError(message) {
         errorContainer.textContent = message;
         errorContainer.classList.remove('hidden')
     }
-     function clearError() {
+
+    function clearError() {
         errorContainer.textContent = '';
         errorContainer.classList.add('hidden');
     }
@@ -194,7 +199,7 @@
         } catch (error) {
             console.error('Error checking user:', error);
             displayError('Ошибка при проверке пользователя. Пожалуйста, попробуйте позже.');
-            return { userExists: false };
+            return {userExists: false};
         }
     }
 
@@ -205,24 +210,44 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ fingerprint: fingerprint, name: name })
+                body: JSON.stringify({fingerprint: fingerprint, name: name})
             });
-             if (!response.ok) {
+            if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return await response.json();
         } catch (error) {
             console.error('Error registering user:', error);
-             displayError('Ошибка при регистрации пользователя. Пожалуйста, попробуйте позже.');
-            return { success: false};
+            displayError('Ошибка при регистрации пользователя. Пожалуйста, попробуйте позже.');
+            return {success: false};
         }
     }
 
-     function toggleLoading(isLoading){
-            registerButton.disabled = isLoading;
-            messageElement.textContent = isLoading ? 'Пожалуйста, подождите...' : 'Введите ваше имя:';
-      }
+    async function updateUserScore(fingerprint, score) {
+        try {
+            const response = await fetch('https://new-year-s-server.onrender.com/score', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fingerprint: fingerprint, score: score }),
+            });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+             return await response.json();
+        } catch (error) {
+            console.error('Error updating user score:', error);
+            displayError('Не удалось обновить очки пользователя.');
+           return {success: false};
+        }
+    }
+
+    function toggleLoading(isLoading) {
+        registerButton.disabled = isLoading;
+        messageElement.textContent = isLoading ? 'Пожалуйста, подождите...' : 'Введите ваше имя:';
+    }
 
     async function startRegistration() {
         const fingerprint = await getFingerprint();
@@ -230,9 +255,12 @@
 
         const checkResult = await checkUser(fingerprint);
         if (checkResult.userExists) {
+           // Fetch initial score and save it to localStorage
+           await loadAndSaveScore(fingerprint);
             window.location.replace('/home.html');
             return;
         }
+
         messageElement.textContent = 'Введите ваше имя:';
         nameInput.classList.remove('hidden');
         registerButton.classList.remove('hidden');
@@ -240,23 +268,44 @@
 
         registerButton.addEventListener('click', async () => {
             clearError();
-           const name = nameInput.value.trim();
-           if (name === '') {
+            const name = nameInput.value.trim();
+            if (name === '') {
                 displayError('Пожалуйста, введите ваше имя.');
                 return;
             }
-           toggleLoading(true)
+            toggleLoading(true)
             const registerResult = await registerUser(fingerprint, name);
-             toggleLoading(false);
-              if (registerResult.success) {
-                   window.location.replace('/home.html');
-              } else {
-                  displayError('Регистрация не удалась, попробуйте позже.');
-              }
+            toggleLoading(false);
+            if (registerResult.success) {
+                  await loadAndSaveScore(fingerprint);
+                window.location.replace('/home.html');
+            } else {
+                displayError('Регистрация не удалась, попробуйте позже.');
+            }
         });
+    }
+    async function loadAndSaveScore(fingerprint) {
+        let totalScore = localStorage.getItem('totalScore');
+         if(totalScore === null) {
+             totalScore = 0;
+        }
+        try {
+             const response = await updateUserScore(fingerprint, Number(totalScore));
+             if(response.success) {
+                console.log('Score updated on server with value:', totalScore);
+                localStorage.removeItem('totalScore');
+             } else {
+                 console.error('Failed to update score on server.');
+                 displayError('Не удалось сохранить очки на сервере.');
+             }
+        } catch (error) {
+              console.error('Error updating score on server:', error);
+             displayError('Ошибка при попытке сохранить очки на сервере.');
+        }
     }
 
     startRegistration();
 </script>
+
 </body>
 </html>
