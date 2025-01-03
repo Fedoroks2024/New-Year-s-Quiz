@@ -21,6 +21,7 @@
             <a href="quiz.html?id=9" class="quiz-button">Квиз 9 "Зимние виды спорта"</a>
             <a href="quiz.html?id=10" class="quiz-button">Квиз 10 "Мифы и легенды Нового года"</a>
         </div>
+        <button id="create-quiz" class="quiz-button">Создать свой квиз</button>
         <div id="total-score-container">
             <p>Общий счет: <span id="total-score">0</span></p>
             <button id="reset-score">Сбросить счет</button>
@@ -75,6 +76,14 @@ function animateSnowflakes(timestamp) {
 
 // Запускаем анимацию снежинок
 requestAnimationFrame(animateSnowflakes);
+
+// Обработчик кнопки "Создать свой квиз"
+document.getElementById('create-quiz').addEventListener('click', function() {
+    // Перенаправление на страницу создания квиза
+    // В будущем тут может быть открытие модального окна или переход на отдельную страницу
+    alert('Функционал создания квиза в разработке!'); 
+    // window.location.href = 'create_quiz.html';
+});
     </script>
 </body>
 </html>
