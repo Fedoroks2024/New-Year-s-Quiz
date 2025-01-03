@@ -1,0 +1,62 @@
+<h1>Подождите...</h1>
+<script>
+const score = localStorage.getItem("totalScore");
+const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+    .then(FingerprintJS => FingerprintJS.load());
+
+let visitorId = null;
+
+// Get the visitor identifier when you need it.
+fpPromise
+    .then(fp => fp.get())
+    .then(result => {
+      // This is the visitor identifier:
+      visitorId = result.visitorId;
+      console.log("Fingerprint ID:", visitorId);
+
+      // Ждем 1 секунду перед отправкой запроса
+      setTimeout(sendData, 1000);
+
+    });
+
+function sendData() {
+    if(!visitorId) {
+        console.error("Fingerprint не загрузился вовремя.");
+        window.location.href = "home.html"; // Перенаправляем в случае ошибки
+        return;
+    }
+
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      "score": score,
+      "fingerprint": visitorId
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    fetch("https://new-year-s-server.onrender.com/score", requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then((result) => {
+        console.log(result);
+        window.location.href = "home.html"; // Перенаправляем после успешного ответа
+      })
+      .catch((error) => {
+        console.error("Ошибка при отправке данных:", error);
+        window.location.href = "home.html"; // Перенаправляем в случае ошибки
+      });
+}
+
+</script>
