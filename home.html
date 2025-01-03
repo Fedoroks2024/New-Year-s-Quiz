@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новогодние Квизы</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Выберите новогодний квиз</h1>
+        <div class="quiz-options">
+            <a href="quiz.html?id=1" class="quiz-button">Квиз 1 "Новый год"</a>
+            <a href="quiz.html?id=2" class="quiz-button">Квиз 2 "Зимние праздники"</a>
+            <a href="quiz.html?id=3" class="quiz-button">Квиз 3 "История Нового года"</a>
+            <a href="quiz.html?id=4" class="quiz-button">Квиз 4 "Новогодние фильмы"</a>
+            <a href="quiz.html?id=5" class="quiz-button">Квиз 5 "Новогодние традиции"</a>
+            <a href="quiz.html?id=6" class="quiz-button">Квиз 6 "Новогодние песни"</a>
+            <a href="quiz.html?id=7" class="quiz-button">Квиз 7 "Новогодние герои"</a>
+            <a href="quiz.html?id=8" class="quiz-button">Квиз 8 "Новогодние угощения"</a>
+            <a href="quiz.html?id=9" class="quiz-button">Квиз 9 "Зимние виды спорта"</a>
+            <a href="quiz.html?id=10" class="quiz-button">Квиз 10 "Мифы и легенды Нового года"</a>
+        </div>
+        <div id="total-score-container">
+            <p>Общий счет: <span id="total-score">0</span></p>
+            <button id="reset-score">Сбросить счет</button>
+        </div>
+    </div>
+    <script src="index.js"></script>
+    <script>
+const SNOWFLAKE_MIN_SIZE = 0.8;
+const SNOWFLAKE_MAX_SIZE = 2.0;
+const SNOWFLAKE_MIN_DURATION = 5;
+const SNOWFLAKE_MAX_DURATION = 10;
+const SNOWFLAKE_MAX_DELAY = 3;
 
+const SNOWFLAKE_CREATE_INTERVAL = 150;
+
+let lastSnowflakeCreateTime = 0;
+
+function getRandom(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function createSnowflake() {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.textContent = '❄'; 
+    snowflake.style.left = `${Math.random() * 100}vw`;
+    snowflake.style.animationDuration = `${getRandom(SNOWFLAKE_MIN_DURATION, SNOWFLAKE_MAX_DURATION)}s`;
+    snowflake.style.animationDelay = `${getRandom(0, SNOWFLAKE_MAX_DELAY)}s`;
+    snowflake.style.fontSize = `${getRandom(SNOWFLAKE_MIN_SIZE, SNOWFLAKE_MAX_SIZE)}em`;
+    
+    // Добавление события animationend
+    snowflake.addEventListener('animationend', () => {
+        snowflake.remove();
+    });
+    
+    return snowflake;
+}
+
+function appendSnowflake(snowflake) {
+    document.body.appendChild(snowflake);
+}
+
+function animateSnowflakes(timestamp) {
+    if (timestamp - lastSnowflakeCreateTime > SNOWFLAKE_CREATE_INTERVAL) {
+        const snowflake = createSnowflake();
+        appendSnowflake(snowflake);
+        lastSnowflakeCreateTime = timestamp;
+    }
+
+    requestAnimationFrame(animateSnowflakes);
+}
+
+// Запускаем анимацию снежинок
+requestAnimationFrame(animateSnowflakes);
+    </script>
+</body>
+</html>
