@@ -286,9 +286,13 @@
     }
     async function loadAndSaveScore(fingerprint) {
         let totalScore = localStorage.getItem('totalScore');
-         if(totalScore === null) {
-             totalScore = 0;
-        }
+        //  check if totalScore is not null and is not NaN
+         if (totalScore === null || isNaN(parseInt(totalScore, 10))) {
+            totalScore = 0;
+        } else {
+            totalScore = parseInt(totalScore, 10);
+         }
+
         try {
              const response = await updateUserScore(fingerprint, Number(totalScore));
              if(response.success) {
